@@ -11,48 +11,53 @@ int main() {
     cin >> n;
     vector<string> ramp(n);
     vector<pair<int, int>> range(n);
-    pair<int,int> standard = {0,0};
-    pair<int,int> adjustoff = {0,0};
-    pair<int,int> adjuston = {0,0}; 
+    pair<int,int> standard = {-1,-1};
+    pair<int,int> adjust = {0,0};
     for (int i = 0; i < n; i++) {
         cin >> ramp[i] >> range[i].first >> range[i].second;
     }
     for (int j = 0; j < n; j++) {
-        if (ramp[j] == "none") {
-            if (standard.second == 0) {
-                standard.first = range[j].first;
-                standard.second = range[j].second;
+        if (ramp[j].length() == 4) {
+            if (standard.second == -1) {
+                standard.first = range[j].first - adjust.second;
+                standard.second = range[j].second - adjust.first;
             }
             else {
-                standard.first = standard.second - adjuston.second - adjustoff.second;
-                standard.second = standard.second - adjuston.first - adjustoff.first;
-                standard.first = max(standard.first, range[j].first);
-                standard.second = min(standard.second, range[j].second);
+                standard.first = max(standard.first, range[j].first - adjust.second);
+                standard.second = min(standard.second, range[j].second - adjust.first);
             }
-        } //Let's say the goal is after mile N. How do you manage?
-        else if (ramp[j] == "on") {
-            adjuston.first += range[j].first;
-            adjuston.second += range[j].second;
+            if (standard.first < 0) {
+                    standard.first = 0;
+                }
+            if (standard.second < 0) {
+                    standard.second = 0;
+                }
+        } 
+        if (ramp[j].length() == 2) {
+            adjust.first += range[j].first;
+            adjust.second += range[j].second;
         }
-        else if (ramp[j] == "off") {
-            adjustoff.first -= range[j].first;
-            adjustoff.second -= range[j].second;
+        if (ramp[j].length() == 3) {
+            adjust.first -= range[j].first;
+            adjust.second -= range[j].second;
         }
     }
-    cout << standard.first << " " << standard.second;
-    //Take the maximum of the smaller and minimum of the larger
-    /* First: How does finding the range for before mile 1 and after mile N work? If I don't understand that, I can't
-    solve this problem. 
-    on 1 1
-    none 10 14
-    none 11 15
-    off 2 3
-    Before mile 1: 10 13
-    After mile N: 8 12
+    cout << standard.first << " " << standard.second << "\n";
+    cout << standard.first + adjust.second << " " << standard.second + adjust.first << "\n";
+    /* Rules:
+    To find the range before mile 1, you need to remove the effects of all the on and off ramps throughout the highway
+    while retaining the accurate range of the traffic on the main highway (you use the different unaltered ranges to 
+    narrow down the most accurate original one).
+    If you have an on/off ramp on mile 1 or just have them before any main highway and you want to find what is after
+    mile n, removing them and then trying to reapply them might harm your calculations. If you have it on mile N or
+    after your last main highway, then use the last main highway to calculate what is before mile 1 rather than trying
+    to remove and reapply. At least, something is going wrong with my current calculations and it's because of that.
+    3
+    on 3 7
+    none 5 5 
+    off 3 7
+    8 12 for after mile n
+    0 2 for before mile n
+    How would I go about reapplying these after? Wait what, why would  
     */
-   /*
-   I'm thinking that maybe I need to retain the "pure" values for the highway, and then keep the on and off ramp
-   stuff in a different pair for future reference. Retaining the pure values would need me to undo the effects
-   that the on and off ramp have on those values, maybe twice. Keep on adjusting and do the max thing afterwards.*/
-
 }

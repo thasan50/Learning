@@ -1,5 +1,4 @@
 #include <iostream>
-<<<<<<< HEAD
 #include <vector>
 #include <cstdio>
 using namespace std;

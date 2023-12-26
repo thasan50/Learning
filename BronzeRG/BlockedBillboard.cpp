@@ -1,19 +1,25 @@
 #include <iostream>
+#include <cstdio>
 using namespace std;
 
-int main () {
-    int coordinates[12];
-    for (int i = 0; i < 12; i++) {
-        cin >> coordinates[i];
+struct Rect {
+    int x1, y1, x2, y2;
+    int area () {
+        return (y2 - y1) * (x2 - x1);
     }
-    int length1 = coordinates[2] - coordinates[0]; //Board1, startx and endx
-    int width1 = coordinates[3] - coordinates[1]; //Board1, starty and endy
-    int length2 = coordinates[6] - coordinates[4]; //Board2, startx and endx
-    int width2 = coordinates[7] - coordinates[5]; //Board2, starty and endy
-    int length3 = coordinates[10] - coordinates[8]; //Truck, startx and endx
-    int width3 = coordinates[11] - coordinates[9]; //Truck, starty and endy
-    
-    //Intersecting area fart needed
-
-    int total_area = length1*width1 - length2*width2;
+};
+int intersect(Rect board, Rect truck) {
+    int xintersect = max(0, min(board.x2, truck.x2) - max(board.x1, truck.x1));
+    int yintersect = max(0, min(board.y2, truck.y2) - max(board.y1, truck.y1));
+    return xintersect * yintersect;
+}
+int main () {
+    freopen("billboard.in", "r", stdin);
+    freopen("billboard.out", "w", stdout);
+    Rect board1, board2, truck;
+    cin >> board1.x1 >> board1.y1 >> board1.x2 >> board1.y2;
+    cin >> board2.x1 >> board2.y1 >> board2.x2 >> board2.y2;
+    cin >> truck.x1 >> truck.y1 >> truck.x2 >> truck.y2;
+    int total_area = board1.area() + board2.area() - intersect(board1, truck) - intersect(board2, truck);
+    cout << total_area;
 }

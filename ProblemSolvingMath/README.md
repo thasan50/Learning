@@ -1,0 +1,1 @@
+# Some notes for problem solving math and relating informaton

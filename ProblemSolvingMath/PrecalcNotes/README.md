@@ -1,1 +1,0 @@
-# Useful notes for precalc from my teacher that I wanted to store

@@ -12,11 +12,11 @@ int main () {
     while (pos != y) {
         prev_pos = pos;
         pos = x + movement;
-        if (y < x and pos < y) {
+        if (y < x && pos < y) {
             total = total + abs(y - prev_pos);
             pos = y;
         }
-        else if (y > x and pos > y) {
+        else if (y > x && pos > y) {
             total = total + abs(y - prev_pos);
             pos = y;
         }

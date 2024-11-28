@@ -24,16 +24,9 @@ int main () {
                 target = target - first[b];
                 second.push_back(first[b]);
             }
-        }
-        bool val = false;
-        for (int a = 0; a < n; a++) {
-            for (int c = 0; c < second.size(); c++) {
-                if (first[a] == second[c]) {
-                    val = true;
-                }
+            else {
+                third.push_back(first[b]);
             }
-            if (val == false) {third.push_back(first[a]);}
-            val = false;
         }
         /*I think this is O(n*m), maybe? n and second.size() are definitely not the same length, but if
         second.size() is guaranteed to be smaller, wouldn't it just be subsumed into n?

@@ -7,24 +7,34 @@
 // #include <chrono>
 using namespace std;
 
-bool hit_sphere(const point3& center, double radius, const ray& r) {
+double hit_sphere(const point3& center, double radius, const ray& r) {
     // Basically, you have the quadratic equation to check if a ray intersects the sphere or its surface
+    // Simplified sphere intersection code: h = b/(-2)
     vec3 oc = center - r.origin();
-    auto a = dot(r.direction(), r.direction());
-    auto b = -2.0 * dot(r.direction(), oc);
-    auto c = dot(oc, oc) - radius*radius;
-    auto discriminant = b*b - 4*a*c;
-    return (discriminant >= 0);
+    auto a = r.direction().length_squared();
+    auto h = dot(r.direction(), oc);
+    auto c = oc.length_squared() - radius*radius;
+    auto discriminant = h*h - a*c;
+
+    if (discriminant < 0) {
+        return -1.0;
+    }
+    else {
+        return (h - sqrt(discriminant)) / (a);
+    }
 }
 
 color ray_color(const ray& r) {
     // Color for where the ray is passing through
+    auto t = hit_sphere(point3(0,0,-1.8), 0.9, r);
+    // Different gradient if passing through sphere
+    if (t > 0.0) {
+        vec3 N = unit_vector(r.at(t) - vec3(0,0,-1)); // Vector formed from direction of camera minus center of sphere
+        return 0.5*color(N.x()+1, N.y()+1, N.z()+1); // Why is it plus 1?
+    }
+
     vec3 unit_direction = unit_vector(r.direction());
     auto a = 0.5*(unit_direction.y() + 1.0);
-    if (hit_sphere(point3(0,0,-1), 0.5, r)) {
-        //Different gradient if passing through sphere
-        return (1.0-a)*color(0.8,0.7,0.6) + a*color(0.2, 0.1, 0.4);
-    }
     return (1.0-a)*color(1.0,0.0,0.0) + a*color(0.5, 0.7, 1.0);
 }
 

@@ -19,8 +19,18 @@ class sphere : public hittable {
             }
             auto sqrtd = sqrt(discriminant);
 
+            //Finding nearest root in acceptable range
+            auto root = (h-sqrtd) / a;
+            if (root <= ray_tmin || ray_tmax <= root) {
+                root = (h+sqrtd) / a;
+                if (root <= ray_tmin || ray_tmax <= root) {
+                    return false;
+                }
+            }
             
-
+            rec.t = root;
+            rec.p = r.at(rec.t);
+            rec.normal = (rec.p - center) / radius;
             return true;
         }
     private:
